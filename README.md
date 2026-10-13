@@ -307,3 +307,4 @@ A complete continuous integration workflow is configured in `.github/workflows/t
   ```
 - **Screenshot-On-Failure:**
   Full-page failure screenshots are captured in `reports/screenshots/failures/` and automatically embedded directly inside `reports/report.html`.
+# tools-shop-demo
