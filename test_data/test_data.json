@@ -1,0 +1,26 @@
+{
+  "app_info": {
+    "title": "Practice Software Testing - Toolshop - v5.0",
+    "home_url": "https://practicesoftwaretesting.com",
+    "api_url": "https://api.practicesoftwaretesting.com"
+  },
+  "navigation_links": [
+    {"name": "Home", "selector": "[data-test='nav-home']", "expected_url_part": "/"},
+    {"name": "Hand Tools", "selector": "[data-test='nav-hand-tools']", "expected_url_part": "/category/hand-tools"},
+    {"name": "Power Tools", "selector": "[data-test='nav-power-tools']", "expected_url_part": "/category/power-tools"},
+    {"name": "Special Tools", "selector": "[data-test='nav-special-tools']", "expected_url_part": "/category/special-tools"},
+    {"name": "Rentals", "selector": "[data-test='nav-rentals']", "expected_url_part": "/rentals"},
+    {"name": "Contact", "selector": "[data-test='nav-contact']", "expected_url_part": "/contact"},
+    {"name": "Sign In", "selector": "[data-test='nav-sign-in']", "expected_url_part": "/auth/login"}
+  ],
+  "checkout_data": {
+    "address": {
+      "street": "100 Automation Blvd",
+      "city": "Sunnyvale",
+      "state": "California",
+      "country_value": "US",
+      "postal_code": "94086"
+    },
+    "payment_method": "cash-on-delivery"
+  }
+}

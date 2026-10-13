@@ -1,0 +1,20 @@
+{
+  "admin_user": {
+    "email": "admin@practicesoftwaretesting.com",
+    "password": "welcome01",
+    "role": "admin"
+  },
+  "invalid_users": [
+    {
+      "email": "nonexistent_user@example.com",
+      "password": "WrongPassword123!",
+      "expected_error": "Invalid email or password"
+    },
+    {
+      "email": "invalid-email-format",
+      "password": "Password123!",
+      "expected_error": "Email format is invalid"
+    }
+  ],
+  "default_password": "PracticePassword987!"
+}

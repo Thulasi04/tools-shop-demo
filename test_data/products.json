@@ -1,0 +1,24 @@
+{
+  "known_product": {
+    "id": "01M4V3AEC0GRYP19W6P6G5Y7S7",
+    "name": "Pliers",
+    "price": 12.01,
+    "category": "Hand Tools",
+    "brand": "ForgeFlex Tools"
+  },
+  "search_terms": {
+    "valid_term": "Pliers",
+    "partial_term": "Ham",
+    "nonexistent_term": "NonExistentItemXYZ123",
+    "special_characters": "!@#$%^&*"
+  },
+  "filter_criteria": {
+    "brand": "ForgeFlex Tools",
+    "sort_options": [
+      {"label": "Name (A - Z)", "value": "name,asc"},
+      {"label": "Name (Z - A)", "value": "name,desc"},
+      {"label": "Price (High - Low)", "value": "price,desc"},
+      {"label": "Price (Low - High)", "value": "price,asc"}
+    ]
+  }
+}
