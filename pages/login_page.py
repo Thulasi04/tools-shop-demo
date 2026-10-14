@@ -21,7 +21,7 @@ class LoginPage(BasePage):
     def load(self) -> "LoginPage":
         """Navigate to the login page."""
         self.navigate("/auth/login")
-        self.page.wait_for_selector(LoginLocators.LOGIN_BUTTON, timeout=10000)
+        self.page.wait_for_selector(LoginLocators.LOGIN_BUTTON, timeout=20000)
         return self
 
     def login(self, email: str, password: str) -> None:

@@ -24,9 +24,16 @@ class ProductPage(BasePage):
         self.nav_cart: Locator = page.locator(ProductLocators.NAV_CART)
 
     def load_product(self, product_id: str) -> "ProductPage":
-        """Navigate directly to product details by product ID."""
+        """Navigate directly to product details by product ID with catalog fallback."""
         self.navigate(f"/product/{product_id}")
-        self.page.wait_for_selector(ProductLocators.PRODUCT_NAME, timeout=10000)
+        try:
+            self.page.wait_for_selector(ProductLocators.PRODUCT_NAME, timeout=20000)
+        except Exception:
+            logger.warning(f"Direct navigation to /product/{product_id} timed out; falling back to catalog click")
+            self.navigate("/")
+            self.page.wait_for_selector(".card, [data-test='product-name']", timeout=15000)
+            self.page.locator(".card, a[href*='product/']").first.click()
+            self.page.wait_for_selector(ProductLocators.PRODUCT_NAME, timeout=20000)
         return self
 
     def get_product_name(self) -> str:

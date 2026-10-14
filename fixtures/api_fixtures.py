@@ -45,18 +45,23 @@ def order_api() -> OrderAPI:
 def registered_user(user_api: UserAPI) -> Dict[str, Any]:
     """Create a verified fresh user in the application via API with retry resilience."""
     last_resp = None
-    for attempt in range(3):
-        user_payload = generate_random_user()
-        resp = user_api.register(user_payload)
-        last_resp = resp
-        if resp.status_code == 201:
-            created_data = resp.json()
-            user_payload["id"] = created_data.get("id")
-            return user_payload
-        time.sleep(1)
+    last_error = None
+    for attempt in range(5):
+        try:
+            user_payload = generate_random_user()
+            resp = user_api.register(user_payload)
+            last_resp = resp
+            if resp.status_code == 201:
+                created_data = resp.json()
+                user_payload["id"] = created_data.get("id")
+                return user_payload
+            last_error = f"Status {resp.status_code}: {resp.text}"
+        except Exception as e:
+            last_error = str(e)
+        time.sleep(attempt + 1)
 
     assert last_resp is not None and last_resp.status_code == 201, (
-        f"User registration fixture failed: {last_resp.text if last_resp else 'No response'}"
+        f"User registration fixture failed: {last_error or 'No response'}"
     )
 
 

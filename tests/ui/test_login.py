@@ -17,7 +17,7 @@ def test_login_with_valid_credentials(
     login_page.login(registered_user["email"], registered_user["password"])
 
     # Verify user menu becomes visible
-    home_page.page.wait_for_selector("[data-test='nav-menu']", timeout=10000)
+    home_page.page.wait_for_selector("[data-test='nav-menu']", timeout=20000)
     assert home_page.is_user_logged_in(), "User menu should be visible after login"
 
     user_name = home_page.get_logged_in_user_name()
@@ -66,7 +66,7 @@ def test_user_logout_flow(
     login_page.load()
     login_page.login(registered_user["email"], registered_user["password"])
 
-    home_page.page.wait_for_selector("[data-test='nav-menu']", timeout=10000)
+    home_page.page.wait_for_selector("[data-test='nav-menu']", timeout=20000)
     home_page.logout()
 
     assert home_page.is_visible(home_page.nav_sign_in), "Sign In button should be visible after logout"

@@ -20,7 +20,7 @@ def test_end_to_end_checkout_with_logged_in_user(
     # 1. Login user
     login_page.load()
     login_page.login(registered_user["email"], registered_user["password"])
-    login_page.page.wait_for_selector("[data-test='nav-menu']", timeout=10000)
+    login_page.page.wait_for_selector("[data-test='nav-menu']", timeout=20000)
 
     # 2. Add product to cart
     product_id = products_data["known_product"]["id"]

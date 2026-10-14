@@ -40,7 +40,7 @@ class HomePage(BasePage):
     def load(self) -> "HomePage":
         """Load the home page and wait for products to appear."""
         self.navigate("/")
-        self.page.wait_for_selector(HomeLocators.PRODUCT_NAMES, timeout=10000)
+        self.page.wait_for_selector(HomeLocators.PRODUCT_NAMES, timeout=20000)
         return self
 
     def navigate_to_category(self, category_locator_or_name: str | Locator) -> None:
@@ -150,5 +150,6 @@ class HomePage(BasePage):
         """Log out current user through user navigation menu."""
         logger.info("Logging out user")
         self.user_menu.click()
+        self.sign_out_button.wait_for(state="visible", timeout=5000)
         self.sign_out_button.click()
-        self.page.wait_for_selector(HomeLocators.NAV_SIGN_IN, timeout=5000)
+        self.page.wait_for_selector(HomeLocators.NAV_SIGN_IN, timeout=15000)

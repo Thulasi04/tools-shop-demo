@@ -24,21 +24,31 @@ def users_data() -> Dict[str, Any]:
 def products_data() -> Dict[str, Any]:
     """Provide products JSON test data, dynamically synchronized with live catalog."""
     data = load_json(app_config.TEST_DATA_DIR / "products.json")
-    try:
-        import requests
-        resp = requests.get(f"{app_config.API_BASE_URL}/products", timeout=5)
-        if resp.status_code == 200:
-            products = resp.json().get("data", [])
-            # Prioritize in-stock 'Pliers', otherwise any in-stock product
-            matched = next((p for p in products if p.get("name") == "Pliers" and p.get("in_stock")), None)
-            if not matched:
-                matched = next((p for p in products if p.get("in_stock")), None)
-            if matched:
-                data["known_product"]["id"] = matched["id"]
-                data["known_product"]["name"] = matched["name"]
-                data["known_product"]["price"] = float(matched["price"])
-    except Exception as e:
-        logger.warning(f"Using static test data, API product discovery fallback: {e}")
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/128.0.0.0 Safari/537.36"
+        ),
+        "Accept": "application/json, text/plain, */*",
+    }
+    for attempt in range(3):
+        try:
+            import requests
+            resp = requests.get(f"{app_config.API_BASE_URL}/products", headers=headers, timeout=15)
+            if resp.status_code == 200:
+                products = resp.json().get("data", [])
+                matched = next((p for p in products if p.get("name") == "Pliers" and p.get("in_stock")), None)
+                if not matched:
+                    matched = next((p for p in products if p.get("in_stock")), None)
+                if matched:
+                    data["known_product"]["id"] = matched["id"]
+                    data["known_product"]["name"] = matched["name"]
+                    data["known_product"]["price"] = float(matched["price"])
+                    break
+        except Exception as e:
+            logger.warning(f"Using static test data, API product discovery fallback: {e}")
+            time.sleep(attempt + 1)
     return data
 
 

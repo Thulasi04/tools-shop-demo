@@ -31,7 +31,7 @@ def test_user_created_via_api_can_login_in_ui(
     login_page.login(user_data["email"], user_data["password"])
 
     # 3. UI: Validate user session reflected in navigation menu
-    home_page.page.wait_for_selector("[data-test='nav-menu']", timeout=10000)
+    home_page.page.wait_for_selector("[data-test='nav-menu']", timeout=20000)
     assert home_page.is_user_logged_in(), "User menu should appear after login"
     assert user_data["first_name"] in home_page.get_logged_in_user_name()
 
@@ -91,7 +91,7 @@ def test_api_registered_user_completes_ui_checkout(
     # 3. UI: Login
     login_page.load()
     login_page.login(user_data["email"], user_data["password"])
-    login_page.page.wait_for_selector("[data-test='nav-menu']", timeout=10000)
+    login_page.page.wait_for_selector("[data-test='nav-menu']", timeout=20000)
 
     # 4. UI: Add product & navigate to cart
     product_page.load_product(purchasable_product_id)

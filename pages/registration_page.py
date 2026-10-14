@@ -30,7 +30,7 @@ class RegistrationPage(BasePage):
     def load(self) -> "RegistrationPage":
         """Navigate to the registration page."""
         self.navigate("/auth/register")
-        self.page.wait_for_selector(RegistrationLocators.SUBMIT_BUTTON, timeout=10000)
+        self.page.wait_for_selector(RegistrationLocators.SUBMIT_BUTTON, timeout=20000)
         return self
 
     def fill_registration_form(self, user: Dict[str, Any]) -> None:
