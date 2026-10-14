@@ -39,6 +39,11 @@ def browser_context_args(browser_context_args: Dict[str, Any]) -> Dict[str, Any]
             "AppleWebKit/537.36 (KHTML, like Gecko) "
             "Chrome/128.0.0.0 Safari/537.36"
         ),
+        "extra_http_headers": {
+            "sec-ch-ua": '"Chromium";v="128", "Google Chrome";v="128", "Not=A?Brand";v="99"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+        },
         "locale": "en-US",
         "timezone_id": "America/New_York",
     }
@@ -46,11 +51,24 @@ def browser_context_args(browser_context_args: Dict[str, Any]) -> Dict[str, Any]
 
 @pytest.fixture(autouse=True)
 def _configure_page(page: Page) -> None:
-    """Mask navigator.webdriver on page instances so CI headless runners bypass Cloudflare challenges."""
+    """Mask navigator.webdriver and userAgentData on page instances so CI runners bypass Cloudflare challenges."""
     page.add_init_script("""
         Object.defineProperty(navigator, 'webdriver', {
             get: () => undefined
         });
+        if (window.navigator.userAgentData) {
+            Object.defineProperty(navigator, 'userAgentData', {
+                get: () => ({
+                    brands: [
+                        { brand: 'Chromium', version: '128' },
+                        { brand: 'Google Chrome', version: '128' },
+                        { brand: 'Not=A?Brand', version: '99' }
+                    ],
+                    mobile: false,
+                    platform: 'Windows'
+                })
+            });
+        }
     """)
 
 

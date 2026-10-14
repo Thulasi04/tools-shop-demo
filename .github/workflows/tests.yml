@@ -34,7 +34,7 @@ jobs:
 
       - name: Run Test Suite
         run: |
-          pytest -v --reruns 2 --reruns-delay 2
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x1024x24" pytest -v --headed --reruns 2 --reruns-delay 2
 
       - name: Upload HTML Reports and Playwright Artifacts
         if: always()
