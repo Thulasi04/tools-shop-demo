@@ -34,7 +34,7 @@ jobs:
 
       - name: Run Test Suite
         run: |
-          pytest -v
+          pytest -v --reruns 2 --reruns-delay 2
 
       - name: Upload HTML Reports and Playwright Artifacts
         if: always()

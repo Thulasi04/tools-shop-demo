@@ -12,6 +12,19 @@ from pages.checkout_page import CheckoutPage
 
 
 @pytest.fixture(scope="session")
+def browser_type_launch_args(browser_type_launch_args: Dict[str, Any]) -> Dict[str, Any]:
+    """Launch arguments for browser instances to prevent bot challenge detection in CI."""
+    args = list(browser_type_launch_args.get("args", []))
+    for flag in ["--disable-blink-features=AutomationControlled", "--no-sandbox", "--disable-setuid-sandbox"]:
+        if flag not in args:
+            args.append(flag)
+    return {
+        **browser_type_launch_args,
+        "args": args,
+    }
+
+
+@pytest.fixture(scope="session")
 def browser_context_args(browser_context_args: Dict[str, Any]) -> Dict[str, Any]:
     """Configure browser context options while respecting pytest-playwright CLI flags.
 
@@ -21,7 +34,24 @@ def browser_context_args(browser_context_args: Dict[str, Any]) -> Dict[str, Any]
     return {
         **browser_context_args,
         "viewport": {"width": 1280, "height": 720},
+        "user_agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/128.0.0.0 Safari/537.36"
+        ),
+        "locale": "en-US",
+        "timezone_id": "America/New_York",
     }
+
+
+@pytest.fixture(autouse=True)
+def _configure_page(page: Page) -> None:
+    """Mask navigator.webdriver on page instances so CI headless runners bypass Cloudflare challenges."""
+    page.add_init_script("""
+        Object.defineProperty(navigator, 'webdriver', {
+            get: () => undefined
+        });
+    """)
 
 
 @pytest.fixture(scope="function")

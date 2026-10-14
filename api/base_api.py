@@ -12,6 +12,14 @@ class BaseAPI:
     def __init__(self, base_url: Optional[str] = None):
         self.base_url = (base_url or config.API_BASE_URL).rstrip("/")
         self.session = requests.Session()
+        self.session.headers.update({
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/128.0.0.0 Safari/537.36"
+            ),
+            "Accept": "application/json, text/plain, */*",
+        })
         self.timeout = config.API_TIMEOUT
 
     def set_auth_token(self, token: str) -> None:
