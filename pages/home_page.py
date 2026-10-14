@@ -43,38 +43,83 @@ class HomePage(BasePage):
         self.page.wait_for_selector(HomeLocators.PRODUCT_NAMES, timeout=10000)
         return self
 
+    def navigate_to_category(self, category_locator_or_name: str | Locator) -> None:
+        """Open categories dropdown and click the specific category."""
+        self.nav_categories.click()
+        if isinstance(category_locator_or_name, str):
+            target = self.page.locator(f"[data-test^='nav-']:has-text('{category_locator_or_name}')").first
+        else:
+            target = category_locator_or_name
+        target.wait_for(state="visible", timeout=5000)
+        target.click()
+
     def search_product(self, term: str) -> None:
         """Search for a product term using the search form."""
         logger.info(f"Searching for product: '{term}'")
         self.search_input.fill(term)
-        self.search_submit_button.click()
-        self.page.wait_for_timeout(1000)
+        try:
+            with self.page.expect_response(
+                lambda r: ("search" in r.url or "products" in r.url) and r.status == 200,
+                timeout=10000,
+            ):
+                self.search_submit_button.click()
+        except Exception:
+            self.search_submit_button.click()
+        self.page.wait_for_timeout(500)
 
     def reset_search(self) -> None:
         """Click the search reset 'X' button."""
         logger.info("Resetting search")
-        self.search_reset_button.click()
-        self.page.wait_for_timeout(1000)
+        try:
+            with self.page.expect_response(
+                lambda r: "products" in r.url and r.status == 200,
+                timeout=10000,
+            ):
+                self.search_reset_button.click()
+        except Exception:
+            self.search_reset_button.click()
+        self.page.wait_for_timeout(500)
 
     def sort_by(self, sort_value: str) -> None:
         """Sort product catalog by given value (e.g., 'price,asc', 'name,desc')."""
         logger.info(f"Sorting products by: {sort_value}")
-        self.sort_dropdown.select_option(value=sort_value)
-        self.page.wait_for_timeout(1000)
+        try:
+            with self.page.expect_response(
+                lambda r: "products" in r.url and r.status == 200,
+                timeout=10000,
+            ):
+                self.sort_dropdown.select_option(value=sort_value)
+        except Exception:
+            self.sort_dropdown.select_option(value=sort_value)
+        self.page.wait_for_timeout(500)
 
     def filter_by_brand(self, brand_name: str) -> None:
         """Select a brand filter checkbox."""
         logger.info(f"Filtering by brand: {brand_name}")
         checkbox = self.page.locator(f"label:has-text('{brand_name}') input")
-        checkbox.check()
-        self.page.wait_for_timeout(1000)
+        try:
+            with self.page.expect_response(
+                lambda r: "products" in r.url and r.status == 200,
+                timeout=10000,
+            ):
+                checkbox.check()
+        except Exception:
+            checkbox.check()
+        self.page.wait_for_timeout(500)
 
     def filter_by_category(self, category_name: str) -> None:
         """Select a category filter checkbox."""
         logger.info(f"Filtering by category: {category_name}")
         checkbox = self.page.locator(f"label:has-text('{category_name}') input")
-        checkbox.check()
-        self.page.wait_for_timeout(1000)
+        try:
+            with self.page.expect_response(
+                lambda r: "products" in r.url and r.status == 200,
+                timeout=10000,
+            ):
+                checkbox.check()
+        except Exception:
+            checkbox.check()
+        self.page.wait_for_timeout(500)
 
     def get_product_names(self) -> List[str]:
         """Return list of product titles visible on current page."""

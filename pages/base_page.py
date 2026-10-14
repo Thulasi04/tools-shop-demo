@@ -84,11 +84,12 @@ class BasePage:
             timeout: Timeout in milliseconds.
 
         Returns:
-            bool: True if visible, False otherwise.
+            bool: True if visible within timeout, False otherwise.
         """
         try:
             locator = self._get_locator(locator_or_selector)
-            return locator.is_visible(timeout=timeout)
+            locator.wait_for(state="visible", timeout=timeout)
+            return True
         except Exception:
             return False
 

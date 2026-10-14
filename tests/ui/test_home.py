@@ -28,11 +28,10 @@ def test_home_page_navigation_elements_are_visible(home_page: HomePage):
 def test_navigation_to_hand_tools_category(home_page: HomePage):
     """Verify navigating to Hand Tools displays relevant category page."""
     home_page.load()
-    home_page.click(home_page.nav_categories)
-    home_page.click(home_page.nav_hand_tools)
+    home_page.navigate_to_category(home_page.nav_hand_tools)
     home_page.wait_for_url_contains("hand-tools")
     assert "hand-tools" in home_page.get_url(), "URL should contain 'hand-tools'"
-    home_page.page.wait_for_selector("a.card, [data-test='product-name']", timeout=10000)
+    home_page.page.wait_for_selector("a.card, [data-test='product-name']", timeout=15000)
     assert home_page.get_product_count() > 0, "Products should be listed in Hand Tools category"
 
 

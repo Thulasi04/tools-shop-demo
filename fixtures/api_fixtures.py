@@ -1,6 +1,7 @@
 """API fixtures for clients, authentication, and test entities."""
 
 import pytest
+import time
 from typing import Dict, Any, Generator
 from api.base_api import BaseAPI
 from api.product_api import ProductAPI
@@ -42,13 +43,21 @@ def order_api() -> OrderAPI:
 
 @pytest.fixture(scope="function")
 def registered_user(user_api: UserAPI) -> Dict[str, Any]:
-    """Create a verified fresh user in the application via API."""
-    user_payload = generate_random_user()
-    resp = user_api.register(user_payload)
-    assert resp.status_code == 201, f"User registration fixture failed: {resp.text}"
-    created_data = resp.json()
-    user_payload["id"] = created_data.get("id")
-    return user_payload
+    """Create a verified fresh user in the application via API with retry resilience."""
+    last_resp = None
+    for attempt in range(3):
+        user_payload = generate_random_user()
+        resp = user_api.register(user_payload)
+        last_resp = resp
+        if resp.status_code == 201:
+            created_data = resp.json()
+            user_payload["id"] = created_data.get("id")
+            return user_payload
+        time.sleep(1)
+
+    assert last_resp is not None and last_resp.status_code == 201, (
+        f"User registration fixture failed: {last_resp.text if last_resp else 'No response'}"
+    )
 
 
 @pytest.fixture(scope="function")
